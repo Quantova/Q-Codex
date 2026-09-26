@@ -91,19 +91,19 @@ Returns the staking and governance parameters the chain runs under.
 
 The request has no fields.
 
-The response has a `staking` object and a `governance` object. The staking object carries `native_unit`, `min_stake`, `staking_pool`, `session_days`, `high_session_tx`, `low_session_bps`, `high_session_bps`, `reward_cap_micro_usd_per_session`, `mainnet_blackout_days`, `bond_lock_days`, `unbonding_days`, `vest_cliff_days`, `vest_tranche_days`, and `vest_tranches`, each an integer. The governance object carries `conviction_max_x10`, an integer, and `tracks`, an array where each track carries `code`, `deposit`, `approval_bps`, `support_bps`, and `period_seconds`. There are seven governance tracks and the example below shows the first.
+The response has a `staking` object and a `governance` object. The staking object carries `native_unit`, `min_stake`, `staking_pool`, `emission_k`, `max_session_emission_bps`, `gov_mint_max_bps`, `session_days`, `high_session_tx`, `mainnet_blackout_days`, `bond_lock_days`, `unbonding_days`, and `reward_vest_days`, each an integer. The governance object carries `conviction_max_x10`, `participation_bps`, and `tracks`, an array where each track carries `code`, `deposit`, `threshold_bps`, `period_seconds`, and `enactment_delay_seconds`. There are five governance tracks, all shown below. A referendum passes when its aye weight reaches the track `threshold_bps` of the staked electorate, turnout reaches `participation_bps`, and aye outweighs nay.
 
 ```
 POST /v1/chain_params
 {}
 ```
 ```
-{"staking":{"native_unit":1000000,"min_stake":2000000000,"staking_pool":685714000000,"session_days":182,"high_session_tx":50000000000,"low_session_bps":100,"high_session_bps":175,"reward_cap_micro_usd_per_session":4000000000,"mainnet_blackout_days":365,"bond_lock_days":90,"unbonding_days":21,"vest_cliff_days":365,"vest_tranche_days":120,"vest_tranches":4},"governance":{"conviction_max_x10":25,"tracks":[{"code":1,"deposit":600000,"approval_bps":8000,"support_bps":4000,"period_seconds":1209600}]}}
+{"staking":{"native_unit":1000000,"min_stake":2000000000,"staking_pool":685714000000,"emission_k":25000,"max_session_emission_bps":500,"gov_mint_max_bps":200,"session_days":182,"high_session_tx":50000000000,"mainnet_blackout_days":365,"bond_lock_days":90,"unbonding_days":21,"reward_vest_days":365},"governance":{"conviction_max_x10":25,"participation_bps":2500,"tracks":[{"code":1,"deposit":225000000000,"threshold_bps":6667,"period_seconds":1209600,"enactment_delay_seconds":604800},{"code":2,"deposit":400000000000,"threshold_bps":6667,"period_seconds":259200,"enactment_delay_seconds":604800},{"code":3,"deposit":150000000000,"threshold_bps":6667,"period_seconds":432000,"enactment_delay_seconds":604800},{"code":4,"deposit":29250000000,"threshold_bps":7500,"period_seconds":21600,"enactment_delay_seconds":3600},{"code":5,"deposit":39000000000,"threshold_bps":7500,"period_seconds":172800,"enactment_delay_seconds":86400}]}}
 ```
 
 ## staking_state
 
-Returns the live staking pools and the price the reward cap is measured against.
+Returns the live staking reward pool, the treasury, and whether mainnet rewards have started.
 
 **Path** `POST /v1/staking_state`
 
@@ -183,7 +183,7 @@ Submits a signed transaction to the mempool. The transaction is the canonical wr
 | --- | --- | --- |
 | tx | string | the canonical signed transaction in hex |
 
-On acceptance the reply is `verdict` `accepted`, `state` either `fresh` or `known`, and `tx_id`. On rejection the reply is `verdict` `rejected` and `reason`. The reason is one of `malformed`, `unknown_sender`, `unsupported_scheme`, `bad_signature`, `bad_nonce`, `bad_call`, `self_transfer`, `meter_limit_too_low`, `fee_too_low`, or `insufficient_funds`. A `bad_nonce` rejection also carries `expected` and `got`.
+On acceptance the reply is `verdict` `accepted`, `state` either `fresh` or `known`, and `tx_id`. On rejection the reply is `verdict` `rejected` and `reason`. The reason is one of `malformed`, `unknown_sender`, `unsupported_scheme`, `bad_signature`, `bad_nonce`, `bad_call`, `self_transfer`, `zero_transfer`, `meter_limit_too_low`, `fee_too_low`, or `insufficient_funds`. A `bad_nonce` rejection also carries `expected` and `got`.
 
 ```
 POST /v1/submit_transaction
