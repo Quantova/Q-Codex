@@ -35,7 +35,7 @@ POST /v1/node_info
 {}
 ```
 ```
-{"chain_id":"Q-test-net-1","genesis_hash":"9f2c...","head_height":10428,"asset":"TQTOV","denomination":"Quon","fee":{"transfer_micro_usd":"500","rate_micro_usd_per_qtov":"1000000","quon_per_qtov":"1000000","transfer_quon":"500"},"version":"0.1.0"}
+{"chain_id":"Q-test-net-01","genesis_hash":"9f2c...","head_height":10428,"asset":"TQTOV","denomination":"Quon","fee":{"transfer_micro_usd":"500","rate_micro_usd_per_qtov":"1000000","quon_per_qtov":"1000000","transfer_quon":"500"},"version":"0.1.0"}
 ```
 
 ## head
